@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class TestLocators:
-# Групаа лакаторов для регистрации
+# Группа лакаторов для регистрации
   REG_NAME=(By.XPATH, ".//fieldset[1]//input")
   REG_EMAIL=(By.XPATH, ".//fieldset[2]//input")
   REG_PASSWORD=(By.XPATH, ".//input[@type='password']")
