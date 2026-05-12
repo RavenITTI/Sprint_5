@@ -4,6 +4,7 @@ from helpers import generate_user_data
 from locators import TestLocators
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from locators import URLS
 @pytest.fixture
 def driver():
     # Создаем браузер
@@ -11,7 +12,7 @@ def driver():
     browser.maximize_window()
     browser.implicitly_wait(16)
     
-    browser.get("https://stellarburgers.education-services.ru")
+    browser.get(URLS.BASE_URL)
     
     yield browser 
     
@@ -22,7 +23,7 @@ def new_user(driver):
     user_data = generate_user_data()
 
   
-    driver.get("https://stellarburgers.education-services.ru/register")
+    driver.get(URLS.REGISTRATION_URL)
     driver.find_element(*TestLocators.REG_NAME).send_keys(user_data["name"])
     driver.find_element(*TestLocators.REG_EMAIL).send_keys(user_data["email"])
     driver.find_element(*TestLocators.REG_PASSWORD).send_keys(user_data["password"])
@@ -34,7 +35,7 @@ def new_user(driver):
 @pytest.fixture
 def authorized_user(driver, new_user):
     """Регистрирует и сразу логинит пользователя."""
-    driver.get("https://stellarburgers.education-services.ru/login")
+    driver.get(URLS.LOGIN_URL)
     driver.find_element(*TestLocators.LOGIN_EMAIL_FIELD).send_keys(new_user["email"])
     driver.find_element(*TestLocators.LOGIN_PASSWORD_FIELD).send_keys(new_user["password"])
     driver.find_element(*TestLocators.LOGIN_BUTTON).click()

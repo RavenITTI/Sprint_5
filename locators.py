@@ -1,6 +1,11 @@
 from selenium.webdriver.common.by import By
 
 
+class URLS:
+    BASE_URL = "https://stellarburgers.education-services.ru/"
+    LOGIN_URL = f"{BASE_URL}login"
+    REGISTRATION_URL = f"{BASE_URL}register"
+
 
 class TestLocators:
 # Группа лакаторов для регистрации

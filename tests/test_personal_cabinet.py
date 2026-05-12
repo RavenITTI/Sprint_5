@@ -1,9 +1,8 @@
-import time
 import pytest
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from locators import TestLocators
-
+from locators import URLS
 
 
 class TestPersonalCabinet:
@@ -42,4 +41,4 @@ class TestPersonalCabinet:
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable(TestLocators.PROFILE_LOGOUT_BUTTON))
         driver.find_element(*TestLocators.PROFILE_LOGOUT_BUTTON).click()
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located(TestLocators.LOGIN_BUTTON))
-        assert "/login" in driver.current_url
+        assert driver.current_url == URLS.LOGIN_URL

@@ -1,62 +1,39 @@
-import time
 import pytest
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from locators import TestLocators
+from locators import URLS
 
 
 
 
-
-# 2 Теста сделал так чтобы было визуально видно, что вкладка действительно переключается (вывод класса до и после клика)
 class TestConstructor:
 
-    def test_go_to_sauces_tab(self, driver):
-        driver.get("https://stellarburgers.education-services.ru/")
+    @pytest.mark.parametrize("tab_locator", [
+        TestLocators.CONSTRUCTOR_SAUCES_TAB,
+        TestLocators.CONSTRUCTOR_FILLINGS_TAB,
+        TestLocators.CONSTRUCTOR_BUNS_TAB
+    ])
+    def test_switch_tabs(self, driver, tab_locator):
+        driver.get(URLS.BASE_URL)
         
-        tab = driver.find_element(*TestLocators.CONSTRUCTOR_SAUCES_TAB)
-        
-       
-        print(f"\nКласс до клика: {tab.get_attribute('class')}")
-        
-        tab.click()
-        
-       
-        time.sleep(1) 
-        
-        
-        print(f"Класс после клика: {tab.get_attribute('class')}")
-        
-        assert "current" in tab.get_attribute("class")
+        if tab_locator == TestLocators.CONSTRUCTOR_BUNS_TAB:
+            driver.find_element(*TestLocators.CONSTRUCTOR_SAUCES_TAB).click()
+           
+            WebDriverWait(driver, 10).until(
+                EC.text_to_be_present_in_element_attribute(
+                    TestLocators.CONSTRUCTOR_SAUCES_TAB, "class", "tab_tab_type_current"
+                )
+            )
 
-    def test_go_to_fillings_tab(self, driver):
-        driver.get("https://stellarburgers.education-services.ru/")
-        
-        
-        tab = driver.find_element(*TestLocators.CONSTRUCTOR_FILLINGS_TAB)
-        
-        
-        print(f"\n[Начинки] Класс до клика: {tab.get_attribute('class')}")
-        
-        
+        tab = driver.find_element(*tab_locator)
         tab.click()
-        
+
        
-        time.sleep(1) 
-        
-        
-        current_class = tab.get_attribute('class')
-        print(f"[Начинки] Класс после клика: {current_class}")
-        
-        
-        assert "tab_tab_type_current" in current_class
-    def test_go_to_buns_tab(self, driver):
-        driver.get("https://stellarburgers.education-services.ru/")
-        
-       
-        driver.find_element(*TestLocators.CONSTRUCTOR_SAUCES_TAB).click()
-        driver.find_element(*TestLocators.CONSTRUCTOR_BUNS_TAB).click()
-        
-        tab_class = driver.find_element(*TestLocators.CONSTRUCTOR_BUNS_TAB).get_attribute("class")
-        
-        assert "tab_tab_type_current" in tab_class
+        WebDriverWait(driver, 10).until(
+            EC.text_to_be_present_in_element_attribute(
+                tab_locator, "class", "tab_tab_type_current"
+            )
+        )
+
+        assert "tab_tab_type_current" in tab.get_attribute("class")
